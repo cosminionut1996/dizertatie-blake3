@@ -1,0 +1,6 @@
+truffle init
+truffle create contract <name>
+truffle migrate
+truffle compile
+truffle test
+truffle console

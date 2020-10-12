@@ -1,0 +1,45 @@
+CHUNK_SIZE <= 1024 bytes
+BLOCK_SIZE <= 64 bytes
+
+
+CV = in_cv = IV
+
+foreach BLOCK in BLOCKS:
+	m[0:15] = BLOCK
+
+	t_counter = CHUNK_INDEX
+
+	b_block_length = BLOCK.size
+
+	flags = 0
+	if BLOCK.is_first(CHUNK):
+		flags |= CHUNK_START
+	if BLOCK.is_last(CHUNK):
+		flags |= CHUNK_END
+	if CHUNK.is_root():
+		flags |= ROOT
+
+	output = compress(*values).trunc()
+
+
+m = 0x0102030405060708090A
+chunk = m
+blocks = split(chunk) = [0x0102030405060708090A [, ... *NONE] ]
+NUM_BLOCKS = 1
+block_1_size = 10
+
+FLAG = CHUNK_START | CHUNK_END | ROOT
+
+
+m[0:3] = [0x4030201, 0x8070605, 0xA09]
+
+ret = compress(
+	CV
+	m[0:15] = [0x4030201, 0x8070605, 0xA09, 0, 0, ... 0]
+	b = 10
+	t = 0
+	FLAG
+)
+truncated_ret = ret[:16]
+
+result = truncated_ret
