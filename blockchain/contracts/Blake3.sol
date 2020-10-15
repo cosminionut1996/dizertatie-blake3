@@ -251,7 +251,7 @@ contract Blake3 {
     return compression_result;
   }
 
-  function hash(
+  function keyed_hash(
     bytes memory input,
     uint32[8] memory key
   ) public pure
@@ -300,6 +300,15 @@ contract Blake3 {
     );
 
     return res3;
+  }
+
+  function hash(
+    bytes memory input
+  ) public pure
+  returns (uint32[16] memory)
+  {
+    uint32[8] memory key = [IV0, IV1, IV2, IV3, IV4, IV5, IV6, IV7];
+    return keyed_hash(input, key);
   }
 
   function mybytestouint32(bytes memory input)

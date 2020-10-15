@@ -112,11 +112,22 @@ contract('Blake3', function(accounts) {
       })
     })
 
+    it('runs the keyed hash function', async () => {
+      const contract = await Blake3.deployed()
+      contract.keyed_hash(
+        Array(2048).fill(2),
+        IV
+      ).then((res) => {
+        numbers = res.map((currentValue) => currentValue.toNumber())
+        s = array_uint32_to_array_hex_64(numbers)
+        console.log(s)
+      })
+    })
+
     it('runs the hash function', async () => {
       const contract = await Blake3.deployed()
       contract.hash(
-        Array(2048).fill(2),
-        IV
+        Array(2048).fill(2)
       ).then((res) => {
         numbers = res.map((currentValue) => currentValue.toNumber())
         s = array_uint32_to_array_hex_64(numbers)
