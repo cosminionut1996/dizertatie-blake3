@@ -22,160 +22,103 @@ contract Blake3 {
   constructor() public {
   }
 
-  function G(
-    uint32 a,
-    uint32 b,
-    uint32 c,
-    uint32 d,
-    uint32 m2i0,
-    uint32 m2i1
-  ) public pure
-    returns (uint32, uint32, uint32, uint32)
-  {
-    uint32 _a = a;
-    uint32 _b = b;
-    uint32 _c = c;
-    uint32 _d = d;
+  // function tada() public returns (bytes32[2] memory c) {
 
-    _a = _a + _b + m2i0;
-    _d = (( _d ^ _a ) >> 16) + (( _d ^ _a ) << 16);
-    _c = _c + _d;
-    _b = (( _b ^ _c ) >> 12) + (( _b ^ _c ) << 20);
-    _a = _a + _b + m2i1;
-    _d = (( _d ^ _a ) >> 8) + (( _d ^ _a ) << 24);
-    _c = _c + _d;
-    _b = (( _b ^ _c ) >> 7) + (( _b ^ _c ) << 25);
-    return (_a, _b, _c, _d);
-  }
+  //   uint256[3] memory input;
+  //   input[0] = 1;
+  //   input[1] = 2;
+  //   input[2] = 3;
+
+  //   assembly {
+	// 		let x := mload(0x40)    //Find empty storage location using "free memory pointer"
+
+	// 		// mstore(xti, 2)            //Place size
+	// 		// mstore(add(x,0x04), 123)  //Place first argument directly next to signature
+	// 		// mstore(add(x,0x24), 456)  //Place second argument next to first, padded to 32 bytes
+
+	// 		let success := staticcall(      //This is the critical change (Pop the top stack value)
+	// 							gas(),      //gas
+	// 							0x13,       //Contract addr
+	// 							// 0, //No value
+	// 							input,      //Inputs are stored at location x
+	// 							96,        //Input number of bytes
+	// 							x,         //Output address
+	// 							96)        //Output number of bytes
+
+  //     mstore(c, mload(x))
+  //     mstore(add(c, 32), mload(add(x, 32)))
+  //     mstore(add(c, 64), mload(add(x, 64)))
+
+	// 		mstore(0x40,add(x,0x44))    // Set storage pointer to empty space
+	// 	}
+	// }
 
   function compress(
-    uint32[8] memory h,     // chaining value
-    uint32[16] memory m,    // message block
-    uint64 t,               // counter (t0, t1) - t0 lower, t1 higher
-    uint32 b,               // # of bytes in message block
-    uint32 d                // flags
-  ) public pure
-    returns (uint32[16] memory)
+    bytes32           in_cv,    // chaining value
+    bytes32[2] memory in_m,     // message
+    uint64            t,        // counter - t=t0t1 - t0 lower order, t1 higher order
+    uint32            b,        // number of bytes in the block
+    uint32            d         // flags
+  ) public view
+  returns (bytes32[2] memory output)
   {
-    uint32[16] memory v;
+    bytes32[4] memory input;
 
-    // The rounds and permutations between rounds are unrolled.
+    input[0] = in_cv;
+    input[1] = in_m[0];
+    input[2] = in_m[1];
+    input[3] = 0;
+    input[3] = input[3] | bytes32((uint256(t & 0xffffffffffffffff) << 192));
+    input[3] = input[3] | bytes32((uint256(b & 0xffffffff) << 160));
+    input[3] = input[3] | bytes32((uint256(d & 0xffffffff) << 128));
 
-    // round 1 (and state initialization)
-    // columns
-    (v[0], v[4], v[8], v[12]) = G(h[0], h[4], IV0, uint32(t), m[0], m[1]);
-    (v[1], v[5], v[9], v[13]) = G(h[1], h[5], IV1, uint32(t >> 32), m[2], m[3]);
-    (v[2], v[6], v[10], v[14]) = G(h[2], h[6], IV2, b, m[4], m[5]);
-    (v[3], v[7], v[11], v[15]) = G(h[3], h[7], IV3, d, m[6], m[7]);
-    // diagonals
-    (v[0], v[5], v[10], v[15]) = G(v[0], v[5], v[10], v[15], m[8], m[9]);
-    (v[1], v[6], v[11], v[12]) = G(v[1], v[6], v[11], v[12], m[10], m[11]);
-    (v[2], v[7], v[8], v[13]) = G(v[2], v[7], v[8], v[13], m[12], m[13]);
-    (v[3], v[4], v[9], v[14]) = G(v[3], v[4], v[9], v[14], m[14], m[15]);
+    assembly {
 
-    // round 2
-    (v[0], v[4],  v[8], v[12]) = G(v[0], v[4], v[8], v[12], m[2], m[6]);
-    (v[1], v[5], v[9], v[13]) = G(v[1], v[5], v[9], v[13],  m[3], m[10]);
-    (v[2], v[6], v[10], v[14]) = G(v[2], v[6], v[10], v[14],  m[7], m[0]);
-    (v[3], v[7], v[11], v[15]) = G(v[3], v[7], v[11], v[15], m[4], m[13]);
-    (v[0], v[5], v[10], v[15]) = G(v[0], v[5], v[10], v[15], m[1], m[11]);
-    (v[1], v[6], v[11], v[12]) = G(v[1], v[6], v[11], v[12], m[12], m[5]);
-    (v[2], v[7], v[8], v[13]) = G(v[2], v[7],  v[8], v[13], m[9], m[14]);
-    (v[3], v[4], v[9], v[14]) = G(v[3], v[4], v[9], v[14], m[15], m[8]);
+			// mstore(xti, 2)            //Place size
+			// mstore(add(x,0x04), 123)  //Place first argument directly next to signature
+			// mstore(add(x,0x24), 456)  //Place second argument next to first, padded to 32 bytes
 
-    // round 3
-    (v[0], v[4],  v[8], v[12]) = G(v[0], v[4], v[8], v[12], m[3], m[4]);
-    (v[1], v[5], v[9], v[13]) = G(v[1], v[5], v[9], v[13],  m[10], m[12]);
-    (v[2], v[6], v[10], v[14]) = G(v[2], v[6], v[10], v[14],  m[13], m[2]);
-    (v[3], v[7], v[11], v[15]) = G(v[3], v[7], v[11], v[15], m[7], m[14]);
-    (v[0], v[5], v[10], v[15]) = G(v[0], v[5], v[10], v[15], m[6], m[5]);
-    (v[1], v[6], v[11], v[12]) = G(v[1], v[6], v[11], v[12], m[9], m[0]);
-    (v[2], v[7], v[8], v[13]) = G(v[2], v[7],  v[8], v[13], m[11], m[15]);
-    (v[3], v[4], v[9], v[14]) = G(v[3], v[4], v[9], v[14], m[8], m[1]);
+			if iszero(staticcall(      //This is the critical change (Pop the top stack value)
+								gas(),      //gas
+								0x13,       //Contract addr
+								// 0, //No value
+								input,     //Inputs are stored at location x
+								112,       //Input number of bytes
+								output,         //Output address
+								64)        //Output number of bytes
+      ) {
+        revert(0, 0)
+      }
 
-    // round 4
-    (v[0], v[4],  v[8], v[12]) = G(v[0], v[4], v[8], v[12], m[10], m[7]);
-    (v[1], v[5], v[9], v[13]) = G(v[1], v[5], v[9], v[13],  m[12], m[9]);
-    (v[2], v[6], v[10], v[14]) = G(v[2], v[6], v[10], v[14],  m[14], m[3]);
-    (v[3], v[7], v[11], v[15]) = G(v[3], v[7], v[11], v[15], m[13], m[15]);
-    (v[0], v[5], v[10], v[15]) = G(v[0], v[5], v[10], v[15], m[4], m[0]);
-    (v[1], v[6], v[11], v[12]) = G(v[1], v[6], v[11], v[12], m[11], m[2]);
-    (v[2], v[7], v[8], v[13]) = G(v[2], v[7],  v[8], v[13], m[5], m[8]);
-    (v[3], v[4], v[9], v[14]) = G(v[3], v[4], v[9], v[14], m[1], m[6]);
+		}
 
-    // round 5
-    (v[0], v[4],  v[8], v[12]) = G(v[0], v[4], v[8], v[12], m[12], m[13]);
-    (v[1], v[5], v[9], v[13]) = G(v[1], v[5], v[9], v[13],  m[9], m[11]);
-    (v[2], v[6], v[10], v[14]) = G(v[2], v[6], v[10], v[14],  m[15], m[10]);
-    (v[3], v[7], v[11], v[15]) = G(v[3], v[7], v[11], v[15], m[14], m[8]);
-    (v[0], v[5], v[10], v[15]) = G(v[0], v[5], v[10], v[15], m[7], m[2]);
-    (v[1], v[6], v[11], v[12]) = G(v[1], v[6], v[11], v[12], m[5], m[3]);
-    (v[2], v[7], v[8], v[13]) = G(v[2], v[7],  v[8], v[13], m[0], m[1]);
-    (v[3], v[4], v[9], v[14]) = G(v[3], v[4], v[9], v[14], m[6], m[4]);
-
-    // round 6
-    (v[0], v[4],  v[8], v[12]) = G(v[0], v[4], v[8], v[12], m[9], m[14]);
-    (v[1], v[5], v[9], v[13]) = G(v[1], v[5], v[9], v[13],  m[11], m[5]);
-    (v[2], v[6], v[10], v[14]) = G(v[2], v[6], v[10], v[14],  m[8], m[12]);
-    (v[3], v[7], v[11], v[15]) = G(v[3], v[7], v[11], v[15], m[15], m[1]);
-    (v[0], v[5], v[10], v[15]) = G(v[0], v[5], v[10], v[15], m[13], m[3]);
-    (v[1], v[6], v[11], v[12]) = G(v[1], v[6], v[11], v[12], m[0], m[10]);
-    (v[2], v[7], v[8], v[13]) = G(v[2], v[7],  v[8], v[13], m[2], m[6]);
-    (v[3], v[4], v[9], v[14]) = G(v[3], v[4], v[9], v[14], m[4], m[7]);
-
-    // round 7
-    (v[0], v[4],  v[8], v[12]) = G(v[0], v[4], v[8], v[12], m[11], m[15]);
-    (v[1], v[5], v[9], v[13]) = G(v[1], v[5], v[9], v[13],  m[5], m[0]);
-    (v[2], v[6], v[10], v[14]) = G(v[2], v[6], v[10], v[14],  m[1], m[9]);
-    (v[3], v[7], v[11], v[15]) = G(v[3], v[7], v[11], v[15], m[8], m[6]);
-    (v[0], v[5], v[10], v[15]) = G(v[0], v[5], v[10], v[15], m[14], m[10]);
-    (v[1], v[6], v[11], v[12]) = G(v[1], v[6], v[11], v[12], m[2], m[12]);
-    (v[2], v[7], v[8], v[13]) = G(v[2], v[7],  v[8], v[13], m[3], m[4]);
-    (v[3], v[4], v[9], v[14]) = G(v[3], v[4], v[9], v[14], m[7], m[13]);
-
-    // finalization
-    v[0] ^= v[8]; v[1] ^= v[9]; v[2] ^= v[10]; v[3] ^= v[11];
-    v[4] ^= v[12]; v[5] ^= v[13]; v[6] ^= v[14]; v[7] ^= v[15];
-    v[8] ^= h[0]; v[9] ^= h[1]; v[10] ^= h[2]; v[11] ^= h[3];
-    v[12] ^= h[4]; v[13] ^= h[5]; v[14] ^= h[6]; v[15] ^= h[7];
-
-    return v;
+    return output;
   }
 
   function process_chunk(
-    uint32[8] memory    in_cv,   // chaining value
-    bytes memory        in_m,    // message
-    uint64              in_t,    // chunk number
-    bool                is_root  // root or not
-  ) public pure
-  returns (uint32[16] memory)
+    bytes32               cv,       // chaining value
+    bytes32[32] memory    message,  // message
+    uint32                len_m,    // message size
+    uint64                t,        // chunk number
+    bool                  is_root   // root or not
+  ) public view
+  returns (bytes32[2] memory slice)
   {
-    uint32 len_m = uint32(in_m.length);
-    uint32 num_full_blocks = len_m >> 6;                           // div 64
-    uint32 last_block_sz = len_m ^ ((len_m >> 6) << 6);       // mod 64    
+    uint32 num_full_blocks = len_m >> 6;    // div 64
+    uint32 last_block_sz = len_m & 0x3f;    // mod 64
     uint32 last_block;
-
-    uint64 t = in_t;
-
-    uint32[8] memory cv;
-    uint32[16] memory compression_result;
     uint32 i;
-    uint32 j;
     uint32 d;
 
-    // prepare cv
-    for (i = 0; i < 8; i++) {
-      cv[i] = in_cv[i];
-    }
 
     if (0 == len_m) {
       if (is_root) {
         d = d | ROOT;
       }
-      return compress(cv, compression_result, t, 0, CHUNK_START | CHUNK_END | d);
+      slice[0] = message[0];
+      slice[1] = message[1];
+      return compress(cv, slice, t, 0, CHUNK_START | CHUNK_END | d);
     }
-
-    bytes memory crt_m = new bytes(64);
 
     if (last_block_sz == uint32(0)) {
       last_block = num_full_blocks - 1;
@@ -185,6 +128,10 @@ contract Blake3 {
     }
 
     for (i = 0; i < num_full_blocks; i++) {
+
+      // prepare message for compression
+      slice[0] = message[i*2];
+      slice[1] = message[i*2 + 1];
 
       // prepare flags
       d = 0;
@@ -200,23 +147,10 @@ contract Blake3 {
         }
       }
 
-      // prepare crt_m
-      for (j=0; j<64; j++) {
-        crt_m[j] = in_m[(i << 6)+j];
-      }
-
-      compression_result = compress(
-        cv,
-        mybytestouint32(crt_m),
-        t,
-        64,
-        d
-      );
+      slice = compress(cv, slice, t, 64, d);
 
       // truncate result
-      for (j=0;j<8;j++) {
-        cv[j] = compression_result[j];
-      }
+      cv = slice[0];
 
     }
 
@@ -229,86 +163,154 @@ contract Blake3 {
         d = d | ROOT;
       }
 
-      // prepare crt_m
-      for (j=0; j<last_block_sz; j++) {
-        crt_m[j] = in_m[(num_full_blocks << 6)+j];
-      }
-      for (j=last_block_sz; j<64; j++) {
-        crt_m[j] = bytes1(0);
-      }
-
-      if (last_block_sz != uint32(0)) {
-        compression_result = compress(
-          cv,
-          mybytestouint32(crt_m),
-          t,
-          last_block_sz,
-          d
-        );
+      if (last_block_sz != 0) {
+        slice[0] = message[num_full_blocks * 2];
+        slice[1] = message[num_full_blocks * 2 + 1];
+        slice = compress(cv, slice, t, last_block_sz, d);
       }
     }
 
-    return compression_result;
+    return slice;
   }
 
-  function keyed_hash(
-    bytes memory input,
-    uint32[8] memory key
-  ) public pure
-  returns (uint32[16] memory)
-  {
-    uint256 i = 0;
-    bytes memory message = new bytes(1024);
-    uint32[16] memory res1;
-    uint32[16] memory res2;
-    uint32[16] memory res3;
-    uint32[16] memory m;
+  // function keyed_hash(
+  //   bytes memory input,
+  //   uint32[8] memory key
+  // ) public view
+  // returns (bytes32[2] memory)
+  // {
+  //   uint256 i;
+  //   uint256 j;
 
-    for(i=0;i<1024; i++) {
-      message[i] = input[i];
-    }
-    res1 = process_chunk(
-      key,
-      message,
-      0,
-      false
-    );
+  //   bytes32[32] memory message;
 
-    for(i=1024;i<2048; i++) {
-      message[i-1024] = input[i];
-    }
-    res2 = process_chunk(
-      key,
-      message,
-      1,
-      false
-    );
+  //   uint32[16] memory m;
+  //   bytes32[2] memory res;
 
-    for (i=0; i<8; i++) {
-      m[i] = res1[i];
-    }
-    for (i=8; i<16; i++) {
-      m[i] = res2[i-8];
-    }
+  //   uint256 stack_size;
+  //   uint256 num_chunks;
+
+  //   (stack_size, num_chunks) = stack_size_num_chunks(input.length);
+  //   uint32[] memory stack = new uint32[](stack_size * 8);
+
+  //   uint32 stack_index = 0;
+  //   uint64 chunk_nb = 0;
+  //   uint64 aux_chunk_nb;
+  //   uint32 max = 0;
+
+
+  //   for (i = 0; i < input.length; i += 1024) {
+
+  //     for(j = 0; j < 1024; j++) {
+  //       message[j] = bytes1(input[j+i]);
+  //     }
+  //     res = process_chunk(key, message, chunk_nb, false);
+
+  //     for(j = 0; j < 8; j++) {
+  //       stack[stack_index + j] = res[j];
+  //     }
+  //     stack_index += 8;
+
+  //     chunk_nb += 1;
+  //     aux_chunk_nb = chunk_nb;
+  //     max = 0;
+  //     while ((aux_chunk_nb > 0) && (aux_chunk_nb & 1 == 0)) {
+  //       max += 1;
+  //       if (max == 100) {
+  //         res[0] = uint32(aux_chunk_nb);
+  //         return res;
+  //       }
+  //       aux_chunk_nb = aux_chunk_nb / 2;
+
+  //       stack_index -= 16;
+  //       for (j = 0; j < 16; j++) {
+  //         m[j] = stack[stack_index + j];
+  //       }
+
+  //       if ( (chunk_nb == num_chunks) && (stack_index == 0) ) {
+  //         return compress(key, m, 0, 64, PARENT | ROOT);
+  //       }
+
+  //       res = compress(key, m, 0, 64, PARENT);
+  //       for(j = 0; j < 8; j++) {
+  //         stack[stack_index + j] = res[j];
+  //       }
+  //       stack_index += 8;
+
+  //     }
+
+  //   }
+
+  //   // for(i=0;i<1024; i++) {
+  //   //   message[i] = input[i];
+  //   // }
+  //   // res1 = process_chunk(
+  //   //   key,
+  //   //   message,
+  //   //   0,
+  //   //   false
+  //   // );
+
+  //   // for(i=1024;i<2048; i++) {
+  //   //   message[i-1024] = input[i];
+  //   // }
+  //   // res2 = process_chunk(
+  //   //   key,
+  //   //   message,
+  //   //   1,
+  //   //   false
+  //   // );
+
+  //   // for (i=0; i<8; i++) {
+  //   //   m[i] = res1[i];
+  //   // }
+  //   // for (i=8; i<16; i++) {
+  //   //   m[i] = res2[i-8];
+  //   // }
     
-    res3 = compress(
-      key,
-      m,
-      0,
-      64,
-      PARENT | ROOT
-    );
+  //   // res3 = compress(
+  //   //   key,
+  //   //   m,
+  //   //   0,
+  //   //   64,
+  //   //   PARENT | ROOT
+  //   // );
 
-    return res3;
+  //   // return res3;
+    
+  //   // for(j = 0; j < 16; j++) {
+  //   //   res[j] = stack[j];
+  //   // }
+  //   // return res;
+  //   return res;
+  // }
+
+  // function hash(
+  //   bytes memory input
+  // ) public view
+  // returns (uint32[16] memory)
+  // {
+  //   uint32[8] memory key = [IV0, IV1, IV2, IV3, IV4, IV5, IV6, IV7];
+  //   return keyed_hash(input, key);
   }
 
-  function hash(
-    bytes memory input
-  ) public pure
-  returns (uint32[16] memory)
-  {
-    uint32[8] memory key = [IV0, IV1, IV2, IV3, IV4, IV5, IV6, IV7];
-    return keyed_hash(input, key);
+  function stack_size_num_chunks(uint256 input_size)
+    private pure
+    returns (uint256, uint256) {
+      uint256 full_chunks = input_size >> 10;
+      uint256 last_chunk_sz = input_size & 0x7ff;
+      uint256 num_chunks = full_chunks;
+      if (last_chunk_sz != 0) {
+        num_chunks += 1;
+      }
+
+      uint256 stack_size = 1;
+      uint256 i;
+      for (i = 1; i < num_chunks; i <<= 1) {
+        stack_size += 1;
+      }
+
+      return (stack_size, num_chunks);
   }
 
   function mybytestouint32(bytes memory input)
@@ -316,34 +318,30 @@ contract Blake3 {
   returns (uint32[16] memory) {
     // takes in at most 64 bytes
     // returns an array of unsigned integers
-
-
+    uint data_ptr;
+    uint state_ptr;
+    uint i;
     uint32[16] memory ret;
 
-    uint256 full = input.length / 4;
-    uint256 i;
-    uint32 k;
-    uint256 remainder;
-
-    if (full > 16) {
-        full = 16;
-        remainder = 0;
-    }
-    else {
-        remainder = input.length % 4;
+    assembly {
+      data_ptr := add(input, 1)
+      state_ptr := add(ret, 31)
     }
 
-    for (i=0; i< full; i++) {
-        ret[i] = 0;
-        for (k=0; k<4; k++) {
-            ret[i] += uint32(uint8(input[4*i + k])) << (8*k);
-        }
-    }
-    if ( (full < 16) && (remainder != 0) ) {
-        ret[full] = 0;
-        for (k=0; k<remainder; k++) {
-            ret[full] += uint32(uint8(input[4*full + k])) << (8*k);
-        }
+    while (i < input.length) {
+      
+      assembly {
+        mstore8(state_ptr, mload(data_ptr))
+        data_ptr := add(data_ptr, 1)
+        state_ptr := sub(state_ptr, 1)
+
+        i := add(i, 1)
+      }
+
+      if (0 == (i & 0x3) ) {
+        state_ptr += 36;
+      }
+      
     }
 
     return ret;

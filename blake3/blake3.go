@@ -571,4 +571,10 @@ func main() {
 	}
 	test_hash(aux)
 
+	aux = make([]byte, 4096)
+	for i := 0; i < 4096; i++ {
+		aux[i] = 2
+	}
+	test_hash(aux)
+
 }

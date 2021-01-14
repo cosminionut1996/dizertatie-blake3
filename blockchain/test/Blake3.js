@@ -5,6 +5,9 @@ IV = [
   0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 ]
 
+IV_BYTES = [0x67, 0xe6, 0x9, 0x6a, 0x85, 0xae, 0x67, 0xbb, 0x72, 0xf3, 0x6e, 0x3c, 0x3a, 0xf5, 0x4f, 0xa5, 0x7f, 0x52, 0xe, 0x51, 0x8c, 0x68, 0x5, 0x9b, 0xab, 0xd9, 0x83, 0x1f, 0x19, 0xcd, 0xe0, 0x5b]
+
+
 function array_uint32_to_array_hex_64(numbers) {
   b = Buffer.alloc(64)
   for (var i = 0; i < 16; i++) {
@@ -20,89 +23,74 @@ function array_uint32_to_array_hex_64(numbers) {
 
 
 contract('Blake3', function(accounts) {
-    it('checks mixing function G', async () => {
-      const contract = await Blake3.deployed()
-      await contract.G(1, 2, 3, 4, 5, 6).then(
-        function(res) {
-          assert.equal(res[0].toNumber(), 1048782, 'results do not match')
-          assert.equal(res[1].toNumber(), 2275162169, 'results do not match')
-          assert.equal(res[2].toNumber(), 3456900099, 'results do not match')
-          assert.equal(res[3].toNumber(), 3456113664, 'results do not match')
-      })
-    })
 
     it('checks compression function', async () => {
       const contract = await Blake3.deployed()
       await contract.compress(
-        [1, 2, 3, 4, 5, 6, 7, 8],
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        [1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 6, 0, 0, 0, 7, 0, 0, 0, 8, 0, 0, 0],
+        [
+          [0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 6, 0, 0, 0, 7, 0, 0, 0],
+          [8, 0, 0, 0, 9, 0, 0, 0, 10, 0, 0, 0, 11, 0, 0, 0, 12, 0, 0, 0, 13, 0, 0, 0, 14, 0, 0, 0, 15, 0, 0, 0]
+        ],
         1,
         16,
         0
       ).then((res) => {
-        assert.equal(res[0].toNumber(), 1026070643, 'results do not match')
-        assert.equal(res[1].toNumber(), 2044347425, 'results do not match')
-        assert.equal(res[2].toNumber(), 730350557, 'results do not match')
-        assert.equal(res[3].toNumber(), 292570700, 'results do not match')
-        assert.equal(res[4].toNumber(), 1300339734, 'results do not match')
-        assert.equal(res[5].toNumber(), 3654734489, 'results do not match')
-        assert.equal(res[6].toNumber(), 513022977, 'results do not match')
-        assert.equal(res[7].toNumber(), 3352352573, 'results do not match')
-        assert.equal(res[8].toNumber(), 3781553364, 'results do not match')
-        assert.equal(res[9].toNumber(), 3125397589, 'results do not match')
-        assert.equal(res[10].toNumber(), 3728701371, 'results do not match')
-        assert.equal(res[11].toNumber(), 1496197852, 'results do not match')
-        assert.equal(res[12].toNumber(), 2680672175, 'results do not match')
-        assert.equal(res[13].toNumber(), 3640847171, 'results do not match')
-        assert.equal(res[14].toNumber(), 3257159665, 'results do not match')
-        assert.equal(res[15].toNumber(), 1237596367, 'results do not match')
+        assert.equal(res[0].toString(), '0x7398283d2144da79dd43882b4c467011169c814d99d2d6d9011c941e3dd7d0c7', 'bad compression result')
+        assert.equal(res[1].toString(), '0xd4ec65e155c849babb773fdedc2a2e59afcfc79f43eb02d9f14f24c2cf38c449', 'bad compression result')
       })
     })
 
     it('checks chunk processing function', async () => {
       const contract = await Blake3.deployed()
-      await contract.process_chunk(
-          IV,
-          Array(10).fill(null).map((u, i) => i+1),
-          0,
-          true
-      ).then((res) => {
-        numbers = res.map((currentValue) => currentValue.toNumber())
-        s = array_uint32_to_array_hex_64(numbers)
-        console.log(s)
+      message = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+
+      // Empty message
+      await contract.process_chunk(IV_BYTES, message, 0, 0, true).then((res) => {
+        assert.equal(res[0], '0xaf1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262', 'bad process_chunk function')
+        assert.equal(res[1], '0xe00f03e7b69af26b7faaf09fcd333050338ddfe085b8cc869ca98b206c08243a', 'bad process_chunk function')
       })
 
-      await contract.process_chunk(IV, [], 0, true).then((res) => {
-        numbers = res.map((currentValue) => currentValue.toNumber())
-        s = array_uint32_to_array_hex_64(numbers)
-        console.log(s)
+      // A couple of bytes
+      message[0] = [1, 0, 0, 0]
+      await contract.process_chunk(IV_BYTES, message, 4, 0, true).then((res) => {
+        assert.equal(res[0], '0xc610e85212d0697cb161d4ba431ba603f273feee7dcb7927c9ff5d74ae6cbfa3', 'bad process_chunk function')
+        assert.equal(res[1], '0x3e99c42522429acfaa8e366cddf802d100076a1318db6ec475fbb1dbbac35895', 'bad process_chunk function')
       })
 
-      await contract.process_chunk(
-        IV,
-        Array(128).fill(3),
-        0,
-        true
-      ).then((res) => {
-        numbers = res.map((currentValue) => currentValue.toNumber())
-        s = array_uint32_to_array_hex_64(numbers)
-        console.log(s)
+      message[0] = [1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 6, 0, 0, 0, 7, 0, 0, 0, 8, 0, 0, 0]
+      message[1] = [9, 0, 0, 0, 10, 0, 0, 0]
+      await contract.process_chunk(IV_BYTES, message, 40, 0, true).then((res) => {
+        assert.equal(res[0], '0xf0b6ef611a0583cc91676d5ada0576fb4511b59b26a7ed4e6fd6307a7571a541', 'bad process_chunk function')
+        assert.equal(res[1], '0x6378142f41953a78de7d9e8227016df592bc9c2e3a38425d714486882a3e9d08', 'bad process_chunk function')
       })
 
-      await contract.process_chunk(
-        IV,
-        Array(150).fill(5),
-        0,
-        true
-      ).then((res) => {
-        numbers = res.map((currentValue) => currentValue.toNumber())
-        s = array_uint32_to_array_hex_64(numbers)
-        console.log(s)
+      message[0] = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+      message[1] = message[0]
+      message[2] = message[0]
+      message[3] = message[0]
+      await contract.process_chunk(IV_BYTES, message, 128, 0, true).then((res) => {
+        assert.equal(res[0], '0xaf894595c5f4f086c867042df34916f80158b75146aa4dd888f765074f90199c', 'bad process_chunk function')
+        assert.equal(res[1], '0x7a644242e81e7be6a395b6256f857229a8e7ad513ce15247a732962c90478ec4', 'bad process_chunk function')
+      })
+
+      message[0] = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+      message[1] = message[0]
+      message[2] = message[0]
+      message[3] = message[0]
+      message[4] = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+      await contract.process_chunk(IV_BYTES, message, 150, 0, true).then((res) => {
+        assert.equal(res[0], '0x3dbb2d2129b0e52efe516119d7dd6ac13ee983883e1791c49daef8ba2c9911d4', 'bad process_chunk function')
+        // assert.equal(res[1], '0x7a644242e81e7be6a395b6256f857229a8e7ad513ce15247a732962c90478ec4', 'bad process_chunk function')
       })
     })
 
     it('checks the bytes to uint32 conversion function', async () => {
       const contract = await Blake3.deployed()
+
+      gas = await contract.mybytestouint32.estimateGas(() => {})
+      console.log("Gas estimation - mybytestouint32 - ", gas)
+
       await contract.mybytestouint32(
         [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A]
       ).then((res) => {
@@ -114,8 +102,12 @@ contract('Blake3', function(accounts) {
 
     it('runs the keyed hash function', async () => {
       const contract = await Blake3.deployed()
+
+      // gas = await contract.keyed_hash.estimateGas(() => {})
+      // console.log("Gas estimation - keyed_hash - ", gas)
+
       contract.keyed_hash(
-        Array(2048).fill(2),
+        Array(1024*4).fill(2),
         IV
       ).then((res) => {
         numbers = res.map((currentValue) => currentValue.toNumber())
