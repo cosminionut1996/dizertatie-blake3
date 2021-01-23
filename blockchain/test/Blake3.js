@@ -81,7 +81,7 @@ contract('Blake3', function(accounts) {
       message[4] = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
       await contract.process_chunk(IV_BYTES, message, 150, 0, true).then((res) => {
         assert.equal(res[0], '0x3dbb2d2129b0e52efe516119d7dd6ac13ee983883e1791c49daef8ba2c9911d4', 'bad process_chunk function')
-        // assert.equal(res[1], '0x7a644242e81e7be6a395b6256f857229a8e7ad513ce15247a732962c90478ec4', 'bad process_chunk function')
+        assert.equal(res[1], '0xd99ae8a988bb9b697240497f17ddc8de612ab62b8c81d462c9da7a66741da24c', 'bad process_chunk function')
       })
     })
 
@@ -106,24 +106,40 @@ contract('Blake3', function(accounts) {
       // gas = await contract.keyed_hash.estimateGas(() => {})
       // console.log("Gas estimation - keyed_hash - ", gas)
 
-      contract.keyed_hash(
-        Array(1024*4).fill(2),
-        IV
+      await contract.keyed_hash(
+        Array(1024).fill(2),
+        IV_BYTES
       ).then((res) => {
-        numbers = res.map((currentValue) => currentValue.toNumber())
-        s = array_uint32_to_array_hex_64(numbers)
-        console.log(s)
+        assert.equal(res[0], '0xfa8af17567c147993830cdd42cea9d8a8f157c9b98b4e7ef5677f417a5d8ae61', 'bad keyed_hash function')
+        assert.equal(res[1], '0xd69756eedb1818331b5c857e900384350a5659ff439d353b02431621cb3f5f0b', 'bad keyed_hash function')
       })
+
+      await contract.keyed_hash(
+        Array(2048).fill(2),
+        IV_BYTES
+      ).then((res) => {
+        assert.equal(res[0], '0x2c3465f993eca019e0de8d085ac02284d0f1e9ad592e0fda9b6f33ee7ecf8adb', 'bad keyed_hash function')
+        assert.equal(res[1], '0xb8b9fec6daacff07ac49612623d4105bfca15f10ea9020c8505c7173b26279e1', 'bad keyed_hash function')
+      })
+
+      await contract.keyed_hash(
+        Array(2047).fill(2),
+        IV_BYTES
+      ).then((res) => {
+        assert.equal(res[0], '0xb0ba41d1c6e1597a7427ef5395691cd5a3045df0de11e6f8a9d32e5341707a69', 'bad keyed_hash function')
+        assert.equal(res[1], '0xc191f3b53f7d60e92f262df5b94feadf71af8bc0db27cfd3b517b41d6e11ad40', 'bad keyed_hash function')
+      })
+
     })
 
-    it('runs the hash function', async () => {
-      const contract = await Blake3.deployed()
-      contract.hash(
-        Array(2048).fill(2)
-      ).then((res) => {
-        numbers = res.map((currentValue) => currentValue.toNumber())
-        s = array_uint32_to_array_hex_64(numbers)
-        console.log(s)
-      })
-    })
+    // it('runs the hash function', async () => {
+    //   const contract = await Blake3.deployed()
+    //   contract.hash(
+    //     Array(2048).fill(2)
+    //   ).then((res) => {
+    //     numbers = res.map((currentValue) => currentValue.toNumber())
+    //     s = array_uint32_to_array_hex_64(numbers)
+    //     console.log(s)
+    //   })
+    // })
 })

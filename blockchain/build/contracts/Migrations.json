@@ -890,12 +890,12 @@
     "58343": {
       "events": {},
       "links": {},
-      "address": "0x732C4E6d62ECf8eFDC690B58187e60E4fAE393C3",
-      "transactionHash": "0x319b41caa938e46630c652324614cbbdaa5ec92e115194a6d6ba4c8a60ada8b9"
+      "address": "0x457a6706f52A35DCe6FC3C827eaDC95fD33DD845",
+      "transactionHash": "0x1dd81eb91fd824b845fd9f7f8cd47d92344b2edcdbc90680c2eed685796168a2"
     }
   },
   "schemaVersion": "3.1.0",
-  "updatedAt": "2021-01-10T23:38:10.942Z",
+  "updatedAt": "2021-01-19T19:43:14.583Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

@@ -175,113 +175,114 @@ contract Blake3 {
 
   // function keyed_hash(
   //   bytes memory input,
-  //   uint32[8] memory key
+  //   bytes32 key
+  // ) public view
+  // returns (bytes32[2] memory)
+  // {
+    
+  //   bytes32[2] memory m1;
+  //   bytes32[2] memory m2;
+  //   bytes32[2] memory m3;
+
+  //   bytes32[32] memory message;
+  //   uint256 i;
+  //   bytes32 temp;
+
+  //   for( i = 32; i <= 1024; i = i + 32) {
+  //     assembly {
+  //       temp := mload(add(input, i))
+  //     }
+  //     message[(i-32)/32] = temp;
+  //   }
+
+  //   m1 = process_chunk(key, message, 1024, 0, false);
+    
+  //   for( i = 32 + 1024; i <= 2048; i = i + 32) {
+  //     assembly {
+  //       temp := mload(add(input, i))
+  //     }
+  //     message[(i-32-1024)/32] = temp;
+  //   }
+
+  //   m2 = process_chunk(key, message, 1024, 1, false);
+    
+  //   m3[0] = m1[0];
+  //   m3[1] = m2[0];
+  //   return m2;
+
+  //   return compress(key, m3, 0, 64, PARENT | ROOT);
+  // }
+
+
+
+  // function keyed_hash(
+  //   bytes memory input,
+  //   bytes32 key
   // ) public view
   // returns (bytes32[2] memory)
   // {
   //   uint256 i;
   //   uint256 j;
 
+  //   bytes32 temp;
   //   bytes32[32] memory message;
 
-  //   uint32[16] memory m;
+  //   bytes32[2] memory m;
   //   bytes32[2] memory res;
 
   //   uint256 stack_size;
   //   uint256 num_chunks;
 
   //   (stack_size, num_chunks) = stack_size_num_chunks(input.length);
-  //   uint32[] memory stack = new uint32[](stack_size * 8);
+  //   bytes32[] memory stack = new bytes32[](stack_size);
 
   //   uint32 stack_index = 0;
   //   uint64 chunk_nb = 0;
   //   uint64 aux_chunk_nb;
-  //   uint32 max = 0;
+  //   // uint32 max = 0;
 
 
   //   for (i = 0; i < input.length; i += 1024) {
 
-  //     for(j = 0; j < 1024; j++) {
-  //       message[j] = bytes1(input[j+i]);
+  //     for(j = i; j < i+1024; j = j + 32) {
+  //       assembly {
+  //         temp := mload(add(input, j))
+  //       }
+  //       message[(j-i)/32] = temp;
   //     }
-  //     res = process_chunk(key, message, chunk_nb, false);
+  //     res = process_chunk(key, message, 1024, chunk_nb, false);
 
-  //     for(j = 0; j < 8; j++) {
-  //       stack[stack_index + j] = res[j];
-  //     }
-  //     stack_index += 8;
+  //     stack[stack_index] = res[0];
+
+  //     stack_index += 1;
 
   //     chunk_nb += 1;
   //     aux_chunk_nb = chunk_nb;
-  //     max = 0;
+  //     // max = 0;
   //     while ((aux_chunk_nb > 0) && (aux_chunk_nb & 1 == 0)) {
-  //       max += 1;
-  //       if (max == 100) {
-  //         res[0] = uint32(aux_chunk_nb);
-  //         return res;
-  //       }
+  //       // max += 1;
+  //       // if (max == 100) {
+  //       //   res[0] = uint32(aux_chunk_nb);
+  //       //   return res;
+  //       // }
   //       aux_chunk_nb = aux_chunk_nb / 2;
 
-  //       stack_index -= 16;
-  //       for (j = 0; j < 16; j++) {
-  //         m[j] = stack[stack_index + j];
-  //       }
+  //       stack_index -= 2;
+  //       m[0] = stack[stack_index];
+  //       m[1] = stack[stack_index + 1];
 
   //       if ( (chunk_nb == num_chunks) && (stack_index == 0) ) {
   //         return compress(key, m, 0, 64, PARENT | ROOT);
   //       }
 
   //       res = compress(key, m, 0, 64, PARENT);
-  //       for(j = 0; j < 8; j++) {
-  //         stack[stack_index + j] = res[j];
-  //       }
-  //       stack_index += 8;
+  //       stack[stack_index] = res[0];
+  //       stack_index += 1;
 
   //     }
 
   //   }
 
-  //   // for(i=0;i<1024; i++) {
-  //   //   message[i] = input[i];
-  //   // }
-  //   // res1 = process_chunk(
-  //   //   key,
-  //   //   message,
-  //   //   0,
-  //   //   false
-  //   // );
-
-  //   // for(i=1024;i<2048; i++) {
-  //   //   message[i-1024] = input[i];
-  //   // }
-  //   // res2 = process_chunk(
-  //   //   key,
-  //   //   message,
-  //   //   1,
-  //   //   false
-  //   // );
-
-  //   // for (i=0; i<8; i++) {
-  //   //   m[i] = res1[i];
-  //   // }
-  //   // for (i=8; i<16; i++) {
-  //   //   m[i] = res2[i-8];
-  //   // }
-    
-  //   // res3 = compress(
-  //   //   key,
-  //   //   m,
-  //   //   0,
-  //   //   64,
-  //   //   PARENT | ROOT
-  //   // );
-
-  //   // return res3;
-    
-  //   // for(j = 0; j < 16; j++) {
-  //   //   res[j] = stack[j];
-  //   // }
-  //   // return res;
   //   return res;
   // }
 
@@ -292,58 +293,129 @@ contract Blake3 {
   // {
   //   uint32[8] memory key = [IV0, IV1, IV2, IV3, IV4, IV5, IV6, IV7];
   //   return keyed_hash(input, key);
+  // }
+
+  function keyed_hash(
+    bytes memory input,
+    bytes32 key
+  ) public view
+  returns (bytes32[2] memory m) {
+
+    uint256 s;
+    uint256 num_full_chunks;
+    uint256 total_chunks;
+    // prepare stack
+    (s, num_full_chunks) = stack_size_num_chunks(input.length);
+    if (num_full_chunks << 10 < input.length) {
+      total_chunks = num_full_chunks + 1;
+    }
+    else {
+      total_chunks = num_full_chunks;
+    }
+    bytes32[] memory stack = new bytes32[](s);
+    bytes32[32] memory message;
+    bytes32 temp;
+
+    uint256 i;
+    uint256 stack_index;
+    uint256 p;
+
+    uint64 chunk_id = 0;
+    uint64 aux_chunk_id;
+
+
+    while (chunk_id < total_chunks) {
+
+      p = 32 + chunk_id * 1024;
+      s = 32 + (chunk_id + 1) * 1024;
+      if (s - 32 > input.length) {
+        s = input.length + 32;
+      }
+      for( i = p; i < s; i = i + 32) {
+        assembly {
+          temp := mload(add(input, i))
+        }
+        message[(i-p)/32] = temp;
+      }
+
+      if (total_chunks == 1) {
+        return process_chunk(key, message, uint32(s-p), 0, true);
+      }
+      m = process_chunk(key, message, uint32(s-p), chunk_id, false);
+
+      stack[stack_index] = m[0];
+      stack_index += 1;
+
+      chunk_id += 1;
+      aux_chunk_id = chunk_id;
+      while ((aux_chunk_id > 0) && (aux_chunk_id & 1 == 0)) {
+        aux_chunk_id = aux_chunk_id / 2;
+        stack_index = stack_index - 2;
+        m[0] = stack[stack_index];
+        m[1] = stack[stack_index + 1];
+        if( (chunk_id == total_chunks) && (stack_index == 0) ) {
+          return compress(key, m, 0, 64, PARENT | ROOT);
+        }
+        m = compress(key, m, 0, 64, PARENT);
+        stack[stack_index] = m[0];
+        stack_index += 1;
+      }
+
+    }
   }
 
   function stack_size_num_chunks(uint256 input_size)
-    private pure
-    returns (uint256, uint256) {
-      uint256 full_chunks = input_size >> 10;
-      uint256 last_chunk_sz = input_size & 0x7ff;
-      uint256 num_chunks = full_chunks;
-      if (last_chunk_sz != 0) {
-        num_chunks += 1;
+    private pure  // total_chunks is converted to last_chunk_size right before return
+    returns (uint256 stack_size, uint256 num_full_chunks) {
+      // = size // 1024
+      num_full_chunks = input_size >> 10;
+
+      uint256 total_chunks = num_full_chunks;
+      if (input_size & 0x3ff != 0) {
+        // There must be one more chunk with 0 < its's size < 1024
+        total_chunks += 1;
       }
 
-      uint256 stack_size = 1;
-      uint256 i;
-      for (i = 1; i < num_chunks; i <<= 1) {
+      // should be log2(total_chunks) + 1
+      stack_size = 1;
+      for (uint256 i = 1; i < total_chunks; i <<= 1) {
         stack_size += 1;
       }
 
-      return (stack_size, num_chunks);
   }
 
-  function mybytestouint32(bytes memory input)
-    public pure
-  returns (uint32[16] memory) {
-    // takes in at most 64 bytes
-    // returns an array of unsigned integers
-    uint data_ptr;
-    uint state_ptr;
-    uint i;
-    uint32[16] memory ret;
+  // function mybytestouint32(bytes memory input)
+  //   public pure
+  // returns (uint32[16] memory) {
+  //   // takes in at most 64 bytes
+  //   // returns an array of unsigned integers
+  //   uint data_ptr;
+  //   uint state_ptr;
+  //   uint i;
+  //   uint32[16] memory ret;
 
-    assembly {
-      data_ptr := add(input, 1)
-      state_ptr := add(ret, 31)
-    }
+  //   assembly {
+  //     data_ptr := add(input, 1)
+  //     state_ptr := add(ret, 31)
+  //   }
 
-    while (i < input.length) {
+  //   while (i < input.length) {
       
-      assembly {
-        mstore8(state_ptr, mload(data_ptr))
-        data_ptr := add(data_ptr, 1)
-        state_ptr := sub(state_ptr, 1)
+  //     assembly {
+  //       mstore8(state_ptr, mload(data_ptr))
+  //       data_ptr := add(data_ptr, 1)
+  //       state_ptr := sub(state_ptr, 1)
 
-        i := add(i, 1)
-      }
+  //       i := add(i, 1)
+  //     }
 
-      if (0 == (i & 0x3) ) {
-        state_ptr += 36;
-      }
+  //     if (0 == (i & 0x3) ) {
+  //       state_ptr += 36;
+  //     }
       
-    }
+  //   }
 
-    return ret;
-  }
+  //   return ret;
+  // }
+
 }
