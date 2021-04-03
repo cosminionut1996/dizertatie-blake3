@@ -13,9 +13,9 @@
       "name": "hash",
       "outputs": [
         {
-          "internalType": "bytes20",
+          "internalType": "bytes32",
           "name": "",
-          "type": "bytes20"
+          "type": "bytes32"
         }
       ],
       "payable": false,
@@ -23,12 +23,12 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"input\",\"type\":\"bytes\"}],\"name\":\"hash\",\"outputs\":[{\"internalType\":\"bytes20\",\"name\":\"\",\"type\":\"bytes20\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/ionutcosmin/Documents/Dizertatie/blockchain/contracts/F.sol\":\"F\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/ionutcosmin/Documents/Dizertatie/blockchain/contracts/F.sol\":{\"keccak256\":\"0x8e1fd321b5a22763483622007bae8024922906a6e2c0f05bf866bc74e2926f02\",\"urls\":[\"bzz-raw://b08e7b82dd32f99f2b88e0d7d46279e262236c08b00f43d26801f00ac422db94\",\"dweb:/ipfs/QmZgjprfQxnRrLzfT8aKWZWUJz75j7vVEkgzbNmrig2A2x\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b506101e2806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063aa1e84de14610030575b600080fd5b6100e96004803603602081101561004657600080fd5b810190808035906020019064010000000081111561006357600080fd5b82018360208201111561007557600080fd5b8035906020019184600183028401116401000000008311171561009757600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929050505061011d565b60405180826bffffffffffffffffffffffff19166bffffffffffffffffffffffff1916815260200191505060405180910390f35b6000806003836040518082805190602001908083835b602083106101565780518252602082019150602081019050602083039250610133565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa158015610198573d6000803e3d6000fd5b5050506040515160601b90508091505091905056fea265627a7a723158207630dfe79b26cb16387430cd30d1f2970f65fb13ff45004dddc8f649f1fb9ff864736f6c63430005100032",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063aa1e84de14610030575b600080fd5b6100e96004803603602081101561004657600080fd5b810190808035906020019064010000000081111561006357600080fd5b82018360208201111561007557600080fd5b8035906020019184600183028401116401000000008311171561009757600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929050505061011d565b60405180826bffffffffffffffffffffffff19166bffffffffffffffffffffffff1916815260200191505060405180910390f35b6000806003836040518082805190602001908083835b602083106101565780518252602082019150602081019050602083039250610133565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa158015610198573d6000803e3d6000fd5b5050506040515160601b90508091505091905056fea265627a7a723158207630dfe79b26cb16387430cd30d1f2970f65fb13ff45004dddc8f649f1fb9ff864736f6c63430005100032",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"input\",\"type\":\"bytes\"}],\"name\":\"hash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/ionutcosmin/Documents/Dizertatie/blockchain/contracts/F.sol\":\"F\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/ionutcosmin/Documents/Dizertatie/blockchain/contracts/F.sol\":{\"keccak256\":\"0xcd51d7682002d0febcf13ca8c5351616c49e0ed5024ca3bce6994380b7ad4afe\",\"urls\":[\"bzz-raw://40da7391cd37cefef3f0c75219cf9b02ee3fffd6ae430da22ba54a59135941f5\",\"dweb:/ipfs/QmSAg3vZZ3NMWT2w8oKc6ZShzBq1Jv92XytoUfbXf17aNp\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061014a806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063aa1e84de14610030575b600080fd5b6100e96004803603602081101561004657600080fd5b810190808035906020019064010000000081111561006357600080fd5b82018360208201111561007557600080fd5b8035906020019184600183028401116401000000008311171561009757600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192905050506100ff565b6040518082815260200191505060405180910390f35b600080828051906020012090508091505091905056fea265627a7a7231582074d146a28c3eedff8ca70b7d877f6a4c50fed8d0ef2f794654df1ac3217658d764736f6c63430005100032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063aa1e84de14610030575b600080fd5b6100e96004803603602081101561004657600080fd5b810190808035906020019064010000000081111561006357600080fd5b82018360208201111561007557600080fd5b8035906020019184600183028401116401000000008311171561009757600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192905050506100ff565b6040518082815260200191505060405180910390f35b600080828051906020012090508091505091905056fea265627a7a7231582074d146a28c3eedff8ca70b7d877f6a4c50fed8d0ef2f794654df1ac3217658d764736f6c63430005100032",
   "sourceMap": "27:208:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;27:208:2;;;;;;;",
-  "deployedSourceMap": "27:208:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;27:208:2;;;;;;;;;;;;;;;;;;;92:140;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;92:140:2;;;;;;;;;;21:11:-1;8;5:28;2:2;;;46:1;43;36:12;2:2;92:140:2;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;92:140:2;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;92:140:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;93:3;85:6;81:16;74:27;137:4;133:9;126:4;121:3;117:14;113:30;106:37;;169:3;161:6;157:16;147:26;;92:140:2;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;155:7;174:9;195:16;205:5;195:16;;;;;;;;;;;;;36:153:-1;66:2;61:3;58:11;36:153;;182:3;176:10;171:3;164:23;98:2;93:3;89:12;82:19;;123:2;118:3;114:12;107:19;;148:2;143:3;139:12;132:19;;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;195:16:2;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;195:16:2;;;;;;;;191:20;;226:1;219:8;;;92:140;;;:::o",
-  "source": "pragma solidity >= 0.5.0;\n\ncontract F {\n\n  // keccak256(bytes memory) returns (bytes32)\n\n\n  function hash(bytes memory input)\n        public view returns (bytes20)\n  {\n      bytes20 x;\n      x = ripemd160(input);\n      return x;\n  }\n\n}",
+  "deployedSourceMap": "27:208:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;27:208:2;;;;;;;;;;;;;;;;;;;92:140;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;92:140:2;;;;;;;;;;21:11:-1;8;5:28;2:2;;;46:1;43;36:12;2:2;92:140:2;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;92:140:2;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;92:140:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;93:3;85:6;81:16;74:27;137:4;133:9;126:4;121:3;117:14;113:30;106:37;;169:3;161:6;157:16;147:26;;92:140:2;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;155:7;174:9;205:5;195:16;;;;;;191:20;;226:1;219:8;;;92:140;;;:::o",
+  "source": "pragma solidity >= 0.5.0;\n\ncontract F {\n\n  // keccak256(bytes memory) returns (bytes32)\n\n\n  function hash(bytes memory input)\n        public view returns (bytes32)\n  {\n      bytes32 x;\n      x = keccak256(input);\n      return x;\n  }\n\n}\n",
   "sourcePath": "/Users/ionutcosmin/Documents/Dizertatie/blockchain/contracts/F.sol",
   "ast": {
     "absolutePath": "/Users/ionutcosmin/Documents/Dizertatie/blockchain/contracts/F.sol",
@@ -85,17 +85,17 @@
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_bytes20",
-                        "typeString": "bytes20"
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
                       },
                       "typeName": {
                         "id": 1035,
-                        "name": "bytes20",
+                        "name": "bytes32",
                         "nodeType": "ElementaryTypeName",
                         "src": "174:7:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_bytes20",
-                          "typeString": "bytes20"
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
                         }
                       },
                       "value": null,
@@ -124,8 +124,8 @@
                       "referencedDeclaration": 1036,
                       "src": "191:1:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_bytes20",
-                        "typeString": "bytes20"
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
                       }
                     },
                     "nodeType": "Assignment",
@@ -155,14 +155,14 @@
                           }
                         ],
                         "id": 1039,
-                        "name": "ripemd160",
+                        "name": "keccak256",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1107,
+                        "referencedDeclaration": 1094,
                         "src": "195:9:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_ripemd160_pure$_t_bytes_memory_ptr_$returns$_t_bytes20_$",
-                          "typeString": "function (bytes memory) pure returns (bytes20)"
+                          "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
+                          "typeString": "function (bytes memory) pure returns (bytes32)"
                         }
                       },
                       "id": 1041,
@@ -175,14 +175,14 @@
                       "nodeType": "FunctionCall",
                       "src": "195:16:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_bytes20",
-                        "typeString": "bytes20"
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
                       }
                     },
                     "src": "191:20:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_bytes20",
-                      "typeString": "bytes20"
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
                     }
                   },
                   "id": 1043,
@@ -199,8 +199,8 @@
                     "referencedDeclaration": 1036,
                     "src": "226:1:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_bytes20",
-                      "typeString": "bytes20"
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
                     }
                   },
                   "functionReturnParameters": 1034,
@@ -264,17 +264,17 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_bytes20",
-                    "typeString": "bytes20"
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
                   },
                   "typeName": {
                     "id": 1032,
-                    "name": "bytes20",
+                    "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
                     "src": "155:7:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_bytes20",
-                      "typeString": "bytes20"
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
                     }
                   },
                   "value": null,
@@ -294,7 +294,7 @@
         "src": "27:208:2"
       }
     ],
-    "src": "0:235:2"
+    "src": "0:236:2"
   },
   "legacyAST": {
     "absolutePath": "/Users/ionutcosmin/Documents/Dizertatie/blockchain/contracts/F.sol",
@@ -351,17 +351,17 @@
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_bytes20",
-                        "typeString": "bytes20"
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
                       },
                       "typeName": {
                         "id": 1035,
-                        "name": "bytes20",
+                        "name": "bytes32",
                         "nodeType": "ElementaryTypeName",
                         "src": "174:7:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_bytes20",
-                          "typeString": "bytes20"
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
                         }
                       },
                       "value": null,
@@ -390,8 +390,8 @@
                       "referencedDeclaration": 1036,
                       "src": "191:1:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_bytes20",
-                        "typeString": "bytes20"
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
                       }
                     },
                     "nodeType": "Assignment",
@@ -421,14 +421,14 @@
                           }
                         ],
                         "id": 1039,
-                        "name": "ripemd160",
+                        "name": "keccak256",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1107,
+                        "referencedDeclaration": 1094,
                         "src": "195:9:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_ripemd160_pure$_t_bytes_memory_ptr_$returns$_t_bytes20_$",
-                          "typeString": "function (bytes memory) pure returns (bytes20)"
+                          "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
+                          "typeString": "function (bytes memory) pure returns (bytes32)"
                         }
                       },
                       "id": 1041,
@@ -441,14 +441,14 @@
                       "nodeType": "FunctionCall",
                       "src": "195:16:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_bytes20",
-                        "typeString": "bytes20"
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
                       }
                     },
                     "src": "191:20:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_bytes20",
-                      "typeString": "bytes20"
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
                     }
                   },
                   "id": 1043,
@@ -465,8 +465,8 @@
                     "referencedDeclaration": 1036,
                     "src": "226:1:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_bytes20",
-                      "typeString": "bytes20"
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
                     }
                   },
                   "functionReturnParameters": 1034,
@@ -530,17 +530,17 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_bytes20",
-                    "typeString": "bytes20"
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
                   },
                   "typeName": {
                     "id": 1032,
-                    "name": "bytes20",
+                    "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
                     "src": "155:7:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_bytes20",
-                      "typeString": "bytes20"
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
                     }
                   },
                   "value": null,
@@ -560,7 +560,7 @@
         "src": "27:208:2"
       }
     ],
-    "src": "0:235:2"
+    "src": "0:236:2"
   },
   "compiler": {
     "name": "solc",
@@ -575,7 +575,7 @@
     }
   },
   "schemaVersion": "3.1.0",
-  "updatedAt": "2021-02-17T11:48:34.369Z",
+  "updatedAt": "2021-02-17T18:40:46.335Z",
   "devdoc": {
     "methods": {}
   },

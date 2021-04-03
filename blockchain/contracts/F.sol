@@ -6,10 +6,10 @@ contract F {
 
 
   function hash(bytes memory input)
-        public view returns (bytes20)
+        public view returns (bytes32)
   {
-      bytes20 x;
-      x = ripemd160(input);
+      bytes32 x;
+      x = keccak256(input);
       return x;
   }
 

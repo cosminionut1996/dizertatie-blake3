@@ -1,12 +1,12 @@
 const F = artifacts.require("./F")
 
 
-contract('Blake2', function(accounts) {
+contract('F', function(accounts) {
 
 
     it('checks F hash function', async () => {
         const contract = await F.deployed()
-1
+
         c = Array.from(Array(4096).fill(3))
         let start = Date.now()
         console.log(`Running hash now: ${start}`)

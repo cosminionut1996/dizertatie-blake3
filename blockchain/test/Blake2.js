@@ -1,3 +1,7 @@
+const fs = require('fs');
+const readline = require('readline');
+
+
 const Blake2 = artifacts.require("./Blake2")
 
 IV_BLAKE2 = ["0x6a09e667f3bcc908", "0xbb67ae8584caa73b", "0x3c6ef372fe94f82b", "0xa54ff53a5f1d36f1", "0x510e527fade682d1", "0x9b05688c2b3e6c1f", "0x1f83d9abfb41bd6b", "0x5be0cd19137e2179"]
@@ -80,25 +84,78 @@ contract('Blake2', function(accounts) {
         //     }
         // })
 
-        c = Array.from(Array(4096).fill(3))
-        let start = Date.now()
-        console.log(`Running hash now: ${start}`)
-        await contract.hash(c).then((res) => {
-            // console.log(res)
-            // expected = [
-            //     '0x9061efb74384e444',
-            //     '0xa08131e7860fd289',
-            //     '0x17c7d122b1b52888',
-            //     '0xe0f14637f5f6511a',
-            //     '0x9a0a77baa8c588d6',
-            //     '0xf45282fd3a1b5b26',
-            //     '0x6e7172ad0c81ddb3',
-            //     '0xa8d410201ede7263'
-            // ]
-            // for (var i = 0; i < res.length; i++) {
-            //     assert.equal(res[i].toString(), expected[i], 'bad compression result')
-            // }
-        })
+        console.log("begin");
+
+        const readInterface = readline.createInterface({
+            input: fs.createReadStream('./test_inputs')
+        });
+
+        let lines = [];
+        let times = [];
+
+        for await (const line of readInterface) {
+            c = Buffer.from(line, 'base64')
+            lines.push(c)
+        }
+
+        for (var i = 0 ; i < lines.length ; i++) {
+            let start = Date.now()
+            res = await contract.hash(c)
+            times.push(start)
+            console.log(`Running hash now: ${start}`)
+        }
+
+        try {
+            fs.writeFileSync('./test_inputs_clone', times.toString(), { flag: 'a+'})
+        } catch(err) {
+            console.log(err)
+        }
+
+        console.log("end");
+
+
+        // readInterface.on('line', function(line) {
+        //     console.log(line)
+        //     c = Array.from(Array(4096).fill(3))
+        //     let start = Date.now()
+        //     console.log(`Running hash now: ${start}`)
+        //     contract.hash(c).then((res) => {
+        //         // console.log(res)
+        //         // expected = [
+        //         //     '0x9061efb74384e444',
+        //         //     '0xa08131e7860fd289',
+        //         //     '0x17c7d122b1b52888',
+        //         //     '0xe0f14637f5f6511a',
+        //         //     '0x9a0a77baa8c588d6',
+        //         //     '0xf45282fd3a1b5b26',
+        //         //     '0x6e7172ad0c81ddb3',
+        //         //     '0xa8d410201ede7263'
+        //         // ]
+        //         // for (var i = 0; i < res.length; i++) {
+        //         //     assert.equal(res[i].toString(), expected[i], 'bad compression result')
+        //         // }
+        //     })
+        // });
+
+        // c = Array.from(Array(4096).fill(3))
+        // let start = Date.now()
+        // console.log(`Running hash now: ${start}`)
+        // await contract.hash(c).then((res) => {
+        //     // console.log(res)
+        //     // expected = [
+        //     //     '0x9061efb74384e444',
+        //     //     '0xa08131e7860fd289',
+        //     //     '0x17c7d122b1b52888',
+        //     //     '0xe0f14637f5f6511a',
+        //     //     '0x9a0a77baa8c588d6',
+        //     //     '0xf45282fd3a1b5b26',
+        //     //     '0x6e7172ad0c81ddb3',
+        //     //     '0xa8d410201ede7263'
+        //     // ]
+        //     // for (var i = 0; i < res.length; i++) {
+        //     //     assert.equal(res[i].toString(), expected[i], 'bad compression result')
+        //     // }
+        // })
 
         // c = Array.from(Array(129).keys())
         // await contract.hash(c).then((res) => {
